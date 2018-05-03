@@ -17,41 +17,38 @@ def generate_sine_wave(frequency, offset, amplitude):
 
     y = DC + AMP*np.sin(w * x / Defines.FS)
 
+    return [x, y]
 
-
-    duration = (len(x) - 1) / Defines.FS
-    #print(duration)
-
-    #file = open("signal.txt","w")
-    #for local_index in range(0, len(y)):
-    #    file.write(str(y[local_index]))
-    #    file.write("\n")
-    #file.close()
-
-# Generates a PDF: Probability Density Function
+# Generates a PDF (Probability Density Function)
 def generate_PDF(gain, center_position, standard_deviation):
     x = np.arange(Defines.N_SAMPLES)
-    a = gain
+
     b = center_position
     c = standard_deviation
-
-    a = 1/(c*np.sqrt(2*np.pi))
+    a = gain / (c * np.sqrt(2 * np.pi))
     d = (-1/2)*np.square((x-b)/c)
 
     y = a * np.exp(d)
 
-    plt.plot(x,y)
-    plt.show()
     return [x, y]
 
+def save_signal(name, x, y):
+    file = open(name,"w")
+    for local_index in range(0, len(y)):
+        file.write(str(y[local_index]))
+        file.write("\n")
+    file.close()
 
 def main():
 
     #generate_sine_wave(1000, 1.65, 1.65)
-    plot_data = generate_PDF(100, 5000, 50)
+    plot_data = generate_PDF(1200, 5000, 600)
 
-    #plt.plot(plot_data[0], plot_data[1])
-    #plt.show()
+    plt.plot(plot_data[0], plot_data[1])
+    plt.show()
+
+    save_signal("gauss_pdf.txt", plot_data[0], plot_data[1])
+
 
 if __name__ == "__main__":
     main()
