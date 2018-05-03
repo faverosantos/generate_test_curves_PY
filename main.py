@@ -11,6 +11,8 @@ class Defines:
 
 def main():
 
+    # Nova alteração
+
     local_frequency = 1000
     w = 2 * np.pi * local_frequency
 
