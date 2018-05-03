@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 class Defines:
+
     # Sampling frequency
     FS = 50000
     N_SAMPLES = 10000
@@ -9,6 +10,7 @@ class Defines:
 
 
 def main():
+
     local_frequency = 1000
     w = 2 * np.pi * local_frequency
 
