@@ -34,7 +34,7 @@ def generate_PDF(gain, center_position, standard_deviation):
 
     return [x, y]
 
-def save_signal(name, y):
+def save_file(name, y):
     file = open(name,"w")
     for local_index in range(0, len(y)):
         file.write(str(y[local_index]))
@@ -49,7 +49,7 @@ def main():
     plt.plot(plot_data[0], plot_data[1])
     plt.show()
 
-    save_signal("gauss_pdf_V00_R02.txt", plot_data[1])
+    save_file("gauss_pdf_V00_R02.txt", plot_data[1])
 
 
 if __name__ == "__main__":
