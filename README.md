@@ -13,7 +13,7 @@ Sample0 is at 0 us; \
 Sample1 is at 20 us; \
 Sample2 is at 40 us; \
 Sample3 is at 60 us. \
-So TS is 20 uS and FS = 50 kHz.
+So TS is 20 us and FS = 50 kHz.
 
 Sample2 is at 40 us, then: \
 NS = SD * FS + 1 \
