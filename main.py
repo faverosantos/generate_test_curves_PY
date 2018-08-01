@@ -1,12 +1,15 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import math
+import scipy.special
 
 class Defines:
 
     # Sampling frequency
     FS = 50000
     # Number of samples
-    N_SAMPLES = 20000
+    N_SAMPLES = 5000
+
 
 # Generates a sine wave
 def generate_sine_wave(frequency, offset, amplitude):
@@ -34,12 +37,31 @@ def generate_PDF(gain, center_position, standard_deviation):
 
     return [x, y]
 
+
 def save_file(name, y):
     file = open(name,"w")
     for local_index in range(0, len(y)):
         file.write(str(y[local_index]))
         file.write("\n")
     file.close()
+
+
+# Generates an Exponentially modified gaussian distribution
+def generate_EMGD(mean, variance, skew):
+    x = np.arange(-10, 10, 0.001)
+
+    m = mean
+    v = variance
+    s = skew
+
+    a = (skew/2)
+    b = a*(2*m + s*np.square(v)-2*x)
+    c = (m + s*np.square(v)-x)/(np.square(2)*v)
+    d = 1 - scipy.special.erf(c)
+
+    y = a*np.exp(b)*d
+
+    return [x, y]
 
 def generate_exponential():
     x = np.arange(Defines.N_SAMPLES)
@@ -61,7 +83,9 @@ def generate_exponential():
 def main():
 
     #[plot_data_1, plot_data_2] = generate_sine_wave(1000, 1.65, 1.65)
-    [plot_data_1, plot_data_2] = generate_PDF(120000, 5000, 600)
+    # [plot_data_1, plot_data_2] = generate_PDF(120000, 5000, 600)
+    #generate_EMGD(mean, variance, skew):
+    [plot_data_1, plot_data_2] = generate_EMGD(-8, 0.1, 0.3)
     #[plot_data_1, plot_data_2] = generate_exponential()
 
     plt.plot(plot_data_1, plot_data_2)
