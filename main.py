@@ -32,7 +32,7 @@ def generate_PDF(gain, center_position, standard_deviation):
 
     y = a * np.exp(d)
 
-    return y
+    return [x, y]
 
 def save_file(name, y):
     file = open(name,"w")
@@ -60,16 +60,17 @@ def generate_exponential():
 
 def main():
 
-    #generate_sine_wave(1000, 1.65, 1.65)
-    #plot_data = generate_PDF(120000, 5000, 600)
-    [plot_data_1, plot_data_2] = generate_exponential()
+    #[plot_data_1, plot_data_2] = generate_sine_wave(1000, 1.65, 1.65)
+    [plot_data_1, plot_data_2] = generate_PDF(120000, 5000, 600)
+    #[plot_data_1, plot_data_2] = generate_exponential()
 
-    plt.plot(plot_data_1, label="P dependent only")
-    plt.plot(plot_data_2, label="T and P dependent")
-    plt.plot(plot_data_1 + plot_data_2, label="sum of both")
-    plt.legend(loc='upper right', bbox_to_anchor=(1, 1.1))
-    plt.ylim([0, 60000])
-    plt.xlim([0, 20000])
+    plt.plot(plot_data_1, plot_data_2)
+    #plt.plot(plot_data_1, label="P dependent only")
+    #plt.plot(plot_data_2, label="T and P dependent")
+    #plt.plot(plot_data_1 + plot_data_2, label="sum of both")
+    #plt.legend(loc='upper right', bbox_to_anchor=(1, 1.1))
+    #plt.ylim([0, 60000])
+    #plt.xlim([0, 20000])
     plt.show()
 
     #save_file("gauss_pdf_V00_R02.txt", plot_data[1])
