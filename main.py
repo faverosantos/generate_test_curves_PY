@@ -60,6 +60,25 @@ def generate_EMGD(mean, variance, skew):
     d = 1 - scipy.special.erf(c)
 
     y = a*np.exp(b)*d
+    max_y = max(y)
+    y = y/max_y
+
+    return [x, y]
+
+# Generates a skew normal distribution
+def generate_SND(skew):
+    x = np.arange(-10, 10, 0.001)
+
+    s = skew
+
+    a = (1/np.sqrt(2*np.pi))
+    b = np.square(x)/2
+    c = s*x/np.sqrt(2)
+    d = (1/2)*(1 + scipy.special.erf(c))
+
+    y = 2*a*np.exp(-b)*d
+    max_y = max(y)
+    y = y/max_y
 
     return [x, y]
 
@@ -82,11 +101,11 @@ def generate_exponential():
 
 def main():
 
-    #[plot_data_1, plot_data_2] = generate_sine_wave(1000, 1.65, 1.65)
+    # [plot_data_1, plot_data_2] = generate_sine_wave(1000, 1.65, 1.65)
     # [plot_data_1, plot_data_2] = generate_PDF(120000, 5000, 600)
-    #generate_EMGD(mean, variance, skew):
-    [plot_data_1, plot_data_2] = generate_EMGD(-8, 0.1, 0.3)
-    #[plot_data_1, plot_data_2] = generate_exponential()
+    # [plot_data_1, plot_data_2] = generate_EMGD(-8, 0.1, 0.3)
+    [plot_data_1, plot_data_2] = generate_SND(5)
+    # [plot_data_1, plot_data_2] = generate_exponential()
 
     plt.plot(plot_data_1, plot_data_2)
     #plt.plot(plot_data_1, label="P dependent only")
