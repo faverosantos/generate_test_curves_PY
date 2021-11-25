@@ -6,7 +6,7 @@ import scipy.special
 class Defines:
 
     # Sampling frequency
-    FS = 50000
+    FS = 10000
     # Number of samples
     N_SAMPLES = 5000
 
@@ -99,15 +99,34 @@ def generate_exponential():
 
     return [y1, y2]
 
+def generate_binary(frequency, offset, amplitude):
+    local_frequency = frequency
+    DC = offset
+    AMP = amplitude
+
+    y = list()
+    state = 0
+
+    samplesPerCycles = Defines.FS/frequency
+
+    for index in range(Defines.N_SAMPLES):
+        if index % (samplesPerCycles/2) == 0:
+            state = not state
+
+        y.append(int(state))
+
+    return y
+
+
 def main():
 
-    # [plot_data_1, plot_data_2] = generate_sine_wave(1000, 1.65, 1.65)
-    # [plot_data_1, plot_data_2] = generate_PDF(120000, 5000, 600)
+    data = generate_binary(2, 0, 5)
+    #[plot_data_1, plot_data_2] = generate_PDF(10000, 2500, 200)
     # [plot_data_1, plot_data_2] = generate_EMGD(-8, 0.1, 0.3)
-    [plot_data_1, plot_data_2] = generate_SND(5)
+    # [plot_data_1, plot_data_2] = generate_SND(5)
     # [plot_data_1, plot_data_2] = generate_exponential()
 
-    plt.plot(plot_data_1, plot_data_2)
+    plt.plot(data)
     #plt.plot(plot_data_1, label="P dependent only")
     #plt.plot(plot_data_2, label="T and P dependent")
     #plt.plot(plot_data_1 + plot_data_2, label="sum of both")
@@ -116,7 +135,8 @@ def main():
     #plt.xlim([0, 20000])
     plt.show()
 
-    #save_file("gauss_pdf_V00_R02.txt", plot_data[1])
+
+    save_file("square_wave_fs_10k_f_2_dc0ac5v.txt", data)
 
 
 if __name__ == "__main__":
