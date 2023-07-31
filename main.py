@@ -1,26 +1,55 @@
 import matplotlib.pyplot as plt
 import numpy as np
-import math
+import rflib as rf
 import scipy.special
 
 class Defines:
 
     # Sampling frequency
-    FS = 10000
+    FS = 1E7
     # Number of samples
-    N_SAMPLES = 5000
+    N_SAMPLES = 10000
 
 
 # Generates a sine wave
-def generate_sine_wave(frequency, offset, amplitude):
-    local_frequency = frequency
-    DC = offset
-    AMP = amplitude
+def generate_sine_wave(carrierFrequency, carrierOffset, carrierAmplitude, carrierPhase):
+    cf = carrierFrequency
+    co = carrierOffset
+    ca = carrierAmplitude
+    cp = rf.degree_to_rad(carrierPhase)
 
-    w = 2 * np.pi * local_frequency
+    w = 2 * np.pi * cf
     x = np.arange(Defines.N_SAMPLES)
 
-    y = DC + AMP*np.sin(w * x / Defines.FS)
+    y = co + ca*np.sin((w * x / Defines.FS) + cp)
+
+    return [x, y]
+
+#reference: https://en.wikipedia.org/wiki/Amplitude_modulation
+def generate_am_modulated_wave(messageFrequency, messageOffset, messageAmplitude, messagePhase, carrierFrequency, carrierOffset, carrierAmplitude, carrierPhase):
+
+    fm = messageFrequency
+    om = messageOffset
+    ma = messageAmplitude
+    mp = rf.degree_to_rad(messagePhase)
+
+    cf = carrierFrequency
+    co = carrierOffset
+    ca = carrierAmplitude
+    cp = rf.degree_to_rad(carrierPhase)
+
+    x = np.arange(Defines.N_SAMPLES)
+
+    # Message sine-wave
+    wm = 2 * np.pi * fm
+    message = ma*np.sin((wm * x / Defines.FS) + mp)
+
+    # Carrier sine-wave
+    wc = 2 * np.pi * cf
+    carrier = ma*np.sin((wc * x / Defines.FS) + cp)
+
+    # Moulated signal
+    y = message*carrier
 
     return [x, y]
 
@@ -38,8 +67,9 @@ def generate_PDF(gain, center_position, standard_deviation):
     return [x, y]
 
 
-def save_file(name, y):
+def save_file(name, details, y):
     file = open(name,"w")
+
     for local_index in range(0, len(y)):
         file.write(str(y[local_index]))
         file.write("\n")
@@ -117,26 +147,22 @@ def generate_binary(frequency, offset, amplitude):
 
     return y
 
+def generate_pairs(x,y):
+
+    pairs = []
+    for index in range(0, len(x)):
+        pairs.append((x[index], y[index]))
+    return pairs
 
 def main():
 
-    data = generate_binary(2, 0, 5)
-    #[plot_data_1, plot_data_2] = generate_PDF(10000, 2500, 200)
-    # [plot_data_1, plot_data_2] = generate_EMGD(-8, 0.1, 0.3)
-    # [plot_data_1, plot_data_2] = generate_SND(5)
-    # [plot_data_1, plot_data_2] = generate_exponential()
+    [x, y] = generate_am_modulated_wave(10E3, 0, 0.1, 0, 100E3, 0, 1, 0)
 
-    plt.plot(data)
-    #plt.plot(plot_data_1, label="P dependent only")
-    #plt.plot(plot_data_2, label="T and P dependent")
-    #plt.plot(plot_data_1 + plot_data_2, label="sum of both")
-    #plt.legend(loc='upper right', bbox_to_anchor=(1, 1.1))
-    #plt.ylim([0, 60000])
-    #plt.xlim([0, 20000])
+    pairs = generate_pairs(x, y)
+    np.savetxt('data.csv', pairs, delimiter=',')
+
+    plt.plot(x, y)
     plt.show()
-
-
-    save_file("square_wave_fs_10k_f_2_dc0ac5v.txt", data)
 
 
 if __name__ == "__main__":
